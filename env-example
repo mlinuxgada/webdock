@@ -1,5 +1,6 @@
 ### Application
 # Point to your application code, wish should be available at `/var/www`
+# @CHANGE this to your needs
 APPLICATION=/storage/projects/www/docker
 
 ### PHP version (Does not apply for HHVM)
@@ -34,8 +35,10 @@ NGINX_HOST_LOG_PATH=./logs/nginx/
 NGINX_SITES_PATH=./nginx/sites/
 
 ### MYSQL Container
+# @CHANGE this to your needs
+MYSQL_STORAGE_PATH=/storage/data/volumes/mysql
 MYSQL_DATABASE=default
-MYSQL_USER=root
+MYSQL_USER=docker
 MYSQL_PASSWORD=qwerty
 MYSQL_PORT=3306
 MYSQL_ROOT_PASSWORD=qwerty
