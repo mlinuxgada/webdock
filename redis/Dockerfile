@@ -1,4 +1,4 @@
-FROM redis:latest
+FROM redis:alpine
 
 MAINTAINER Mihail Krastev <mlinuxgada@gmail.com>
 
