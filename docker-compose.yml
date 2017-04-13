@@ -78,6 +78,21 @@ services:
       networks:
         - backend
 
+### PostGre ############
+
+    postgres:
+        image: postgres
+          # build:
+          #   context: ./postgres
+        ports:
+            - "5432:5432"
+        volumes:
+            - ${POSTGRES_STORAGE_PATH}:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_DB=${POSTGRES_DB_NAME}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
 ### Redis Container #########################################
 
     redis:
@@ -114,6 +129,8 @@ networks:
 
 volumes:
   mysql:
+    driver: "local"
+  postgres:
     driver: "local"
   memcached:
     driver: "local"
