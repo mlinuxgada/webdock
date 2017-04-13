@@ -10,81 +10,17 @@
 #    https://hub.docker.com/r/laradock/php-fpm/tags/
 #
 
-#FROM laradock/php-fpm:7.1--1.3
-FROM php:7.1.3-fpm
+FROM php:7.1.3-fpm-alpine
 
 MAINTAINER Mihail Krastev <mlinuxgada@gmail.com>
 
 
-#####################################
-# xDebug:
-#####################################
-RUN apt-get update \
-	&& apt-get install -y --no-install-recommends \
-	curl \
-	libmemcached-dev \
-	libz-dev \
-	libpq-dev \
-	libjpeg-dev \
-	libpng12-dev \
-	libfreetype6-dev \
-	libssl-dev \
-	libmcrypt-dev \
-	&& rm -rf /var/lib/apt/lists/* \
-   && docker-php-ext-install mcrypt \
-   && docker-php-ext-install pdo_mysql \
-   && docker-php-ext-install pdo_pgsql \
-   && docker-php-ext-configure gd \
-   --enable-gd-native-ttf \
-   --with-jpeg-dir=/usr/lib \
-   --with-freetype-dir=/usr/include/freetype2 \
-   && docker-php-ext-install gd \
-	&& apt-get -y update \
-    && apt-get -y install libxml2-dev php-soap \
-    && docker-php-ext-install soap \
-    && apt-get install -y zlib1g-dev libicu-dev g++ \
-    && pecl install -o -f redis \
-
-    && curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz" \
-    && mkdir -p memcached \
-    && tar -C memcached -zxvf /tmp/memcached.tar.gz --strip 1 \
-    && ( \
-        cd memcached \
-        && phpize \
-        && ./configure \
-        && make -j$(nproc) \
-        && make install \
-    ) \
-    && rm -r memcached \
-    && rm /tmp/memcached.tar.gz \
-    && docker-php-ext-enable memcached \
-    && rm -rf /tmp/pear \
-
-    && pecl install mongodb \
-    && docker-php-ext-enable mongodb \
-
-    && docker-php-ext-enable redis \
-    && docker-php-ext-install bcmath \
-    && docker-php-ext-install mysqli \
-    && docker-php-ext-install opcache \
-    && docker-php-ext-enable opcache \
-    && docker-php-ext-install tokenizer \
-    && docker-php-ext-install exif \
-    && docker-php-ext-enable exif \
-    && apt-get install -y zlib1g-dev libicu-dev g++ \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-install intl \
-    && apt-get -y update \
-    && apt-get install -y poppler-utils ghostscript \
-    && docker-php-ext-install zip \
-    && rm -r /var/lib/apt/lists/* \
-    && usermod -u 1000 www-data \
-    && apt-get autoremove -y \
-	&& docker-php-ext-install zip \
-    && pecl install xdebug \
-    && docker-php-ext-enable xdebug \
-    && apt-get remove --purge -y g++ gcc-4.9 
-
+RUN apk update \
+	&& apk add libxml2-dev bzip2 \ 
+	&& docker-php-ext-install bcmath bz2 exif mysqli opcache pdo pdo_mysql soap \
+	#&& pecl install redis-3.1.0 \
+    #&& pecl install xdebug-2.5.0 \
+    && docker-php-ext-enable bcmath bz2 exif mysqli opcache pdo pdo_mysql soap
 
 # Copy xdebug configration for remote debugging
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
