@@ -58,7 +58,6 @@ services:
         - MYSQL_PASSWORD=${MYSQL_PASSWORD}
         - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       volumes:
-          #- mysql:/var/lib/mysql
         - ${MYSQL_STORAGE_PATH}:/var/lib/mysql
       ports:
         - "${MYSQL_PORT}:3306"
@@ -121,6 +120,21 @@ services:
       networks:
         - backend
 
+### ElasticSearch Container #################################
+
+    elasticsearch:
+      build: ./elasticsearch
+      volumes:
+        - elasticsearch-data:/usr/share/elasticsearch/data
+        - elasticsearch-plugins:/usr/share/elasticsearch/plugins
+      ports:
+        - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"
+        - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
+      depends_on:
+        - php-fpm
+      networks:
+        - frontend
+
 ### Networks Setup ############################################
 
 networks:
@@ -139,4 +153,8 @@ volumes:
   memcached:
     driver: "local"
   redis:
+    driver: "local"
+  elasticsearch-data:
+    driver: "local"
+  elasticsearch-plugins:
     driver: "local"
